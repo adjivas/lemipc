@@ -19,6 +19,11 @@ env:
   - ARCH=x86_64
   - ARCH=i686
 
+matrix:
+  allow_failures:
+    - rust: stable
+    - rust: 1.3.0
+
 script:
   - cargo build
 
