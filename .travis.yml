@@ -22,6 +22,7 @@ env:
 matrix:
   allow_failures:
     - rust: stable
+    - rust: beta
     - rust: 1.3.0
 
 script:
