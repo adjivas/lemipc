@@ -12,10 +12,10 @@ mod board;
 #[allow(unused_unsafe, unused_assignments)]
 fn main () {
     let pid: i32 = getpid!();
-    let msg_id: i32 = msgget!(
+    let msg_id: i32 = msgget! (
         ftok!().unwrap()
     ).unwrap();
-    let board: &mut lemipc::board::Board = {
+    let map: &mut lemipc::board::Map = {
         let id = shm_getboard!().unwrap();
         let addr = shmat!(id).unwrap();
 
@@ -27,7 +27,7 @@ fn main () {
     signal!(sig::ffi::Sig::USR1, lemipc::command::receive);
     signal!(sig::ffi::Sig::KILL, lemipc::command::quit);
     signal!(sig::ffi::Sig::INT, lemipc::command::quit);
-    board.spawn_pawn(pid);
+    map.spawn_pawn(pid);
     lemipc::command::hello(pid);
     loop {
         match read_command!() {
@@ -38,9 +38,7 @@ fn main () {
             Some(c) if c == 27 => lemipc::command::cheat(c as i32),
             Some(c) if c == 63 => lemipc::command::quit(c as i32),
             Some(c) if c == 37 => lemipc::command::help(c as i32),
-            _ => {
-                 println!("Command not found.");
-            },
+            _ => {},
         }
     }
 }

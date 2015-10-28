@@ -8,26 +8,48 @@
 #![allow(dead_code)]
 extern crate std;
 
-const WIDTH : usize = 8;
-const HEIGHT: usize = 8;
+use board::cell::Cell;
 
-/// The `Board` structure defines the grid and the score.
+const WIDTH : usize = 4;
+const HEIGHT: usize = 4;
 
-pub struct Board {
-    grid: [[i32; WIDTH]; HEIGHT],
+/// The `Map` structure defines the grid and the score.
+
+pub struct Map {
+    grid: [[Cell; WIDTH]; HEIGHT],
     score: [usize; 2],
 }
 
-impl Board {
+impl Map {
 
-    /// The `get` function returns the value cell.
+    /// The `get_pid` function returns the (pid, team) cell.
 
     pub fn get (
         &self,
         x: usize,
         y: usize,
-    ) -> i32 {
-        self.grid[x][y]
+    ) -> Option<(i32, bool)> {
+        self.grid[x][y].get()
+    }
+
+    /// The `get_pid` function returns the pid cell.
+
+    pub fn get_pid (
+        &self,
+        x: usize,
+        y: usize,
+    ) -> Option<i32> {
+        self.grid[x][y].get_pid()
+    }
+
+    /// The `get_team` function returns the team cell.
+
+    fn get_team (
+        &self,
+        x: usize,
+        y: usize,
+    ) -> Option<bool> {
+        self.grid[x][y].get_team()
     }
 
     /// The `set` function writes the value at [X; Y] cell.
@@ -36,9 +58,21 @@ impl Board {
         &mut self,
         x: usize,
         y: usize,
-        value: i32,
+        pid: i32,
+        team: bool,
     ) -> bool {
-        self.grid[x][y] = value;
+        self.grid[x][y].set(pid, team);
+        true
+    }
+
+    /// The `unset` function writes the value at [X; Y] cell.
+
+    pub fn unset (
+        &mut self,
+        x: usize,
+        y: usize,
+    ) -> bool {
+        self.grid[x][y].unset();
         true
     }
 
@@ -70,8 +104,7 @@ impl Board {
         y: usize,
     ) -> bool {
         match self.len_pawn() % 2 == 0 {
-            true => self.set(x, y, pid),
-            false => self.set(x, y, -pid),
+            team => self.set(x, y, pid, team),
         }
     }
 
@@ -81,8 +114,8 @@ impl Board {
     ) -> bool {
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
-                return match self.get(x, y) {
-                    0i32 => self.add_pawn(pid, x, y),
+                return match self.get_pid(x, y) {
+                    None => self.add_pawn(pid, x, y),
                     _ => continue ,
                 }
             }
@@ -97,7 +130,7 @@ impl Board {
         match self.search_pawn(pid) {
             Some((team, x, y)) => {
                 self.set_score(team);
-                self.set(x, y, 0i32)
+                self.unset(x, y)
             },
             None => false,
         }
@@ -110,9 +143,8 @@ impl Board {
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
                 return match self.get(x, y) {
-                    value if value ==  pid => Some((true, x, y)),
-                    value if value == -pid => Some((false, x, y)),
-                    _ => continue,
+                    Some((id, team)) if id == pid => Some((team, x, y)),
+                    _ => continue ,
                 }
             }
         }
@@ -126,7 +158,7 @@ impl Board {
 
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
-                if self.get(x, y) != 0i32 {
+                if let Some(_) = self.get_pid(x, y) {
                     len += 1;
                 }
             }
@@ -135,14 +167,14 @@ impl Board {
     }
 }
 
-impl Default for Board {
+impl Default for Map {
 
     /// The `default` constructor function returns
-    /// a empty board.
+    /// a empty map.
 
     fn default() -> Self {
-        Board {
-            grid: [[0i32; WIDTH]; HEIGHT],
+        Map {
+            grid: [[Default::default(); WIDTH]; HEIGHT],
             score: [0usize; 2],
         }
     }

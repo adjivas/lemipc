@@ -7,7 +7,7 @@
 
 extern crate std;
 
-use board::Board;
+use board::Map;
 
 /// The `hello` function prints the first message of game.
 
@@ -71,7 +71,7 @@ pub fn cheat (_: i32) {
 pub fn quit (_: i32) {
     let id = shm_getboard_if_created!().unwrap();
     let addr = shmat!(id).unwrap();
-    let board: &mut Board = {
+    let board: &mut Map = {
         unsafe {
             std::mem::transmute(addr)
         }
