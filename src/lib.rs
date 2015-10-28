@@ -10,7 +10,7 @@
 #[macro_reexport(ftok, shmget_id, shmat, shmget, shmdt, shmctl)]
 #[macro_use]
 extern crate shm as shm_crate;
-#[macro_reexport(msgctl)]
+#[macro_reexport(msgctl, msgget, msgsnd, msgrcv)]
 #[macro_use]
 extern crate msg as msg_crate;
 #[macro_reexport(kill, signal, getpid)]

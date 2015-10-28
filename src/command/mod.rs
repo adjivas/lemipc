@@ -6,15 +6,15 @@
 // except according to those terms.
 
 mod lib;
-//pub mod ffi;
 
 pub use ffi;
 pub use self::lib::{
     hello,
     play,
+    email,
+    receive,
     map,
-    mail,
     cheat,
     quit,
-    help
+    help,
 };
