@@ -5,7 +5,16 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
-pub mod lib;
+mod lib;
+//pub mod ffi;
 
-pub use self::lib::quit;
 pub use ffi;
+pub use self::lib::{
+    hello,
+    play,
+    map,
+    mail,
+    cheat,
+    quit,
+    help
+};

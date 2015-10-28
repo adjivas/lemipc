@@ -1,5 +1,5 @@
 [package]
-name = "console"
+name = "lemipc"
 version = "0.1.0"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
 description = "subject of lemipc game"

@@ -5,6 +5,7 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#![allow(dead_code)]
 extern crate std;
 
 const WIDTH : usize = 8;
@@ -146,25 +147,3 @@ impl Default for Board {
         }
     }
 }
-/*
-impl std::fmt::Display for Board {
-
-    /// The `fmt` function interfaces the print
-    /// of structure'Board.
-
-	fn fmt (
-        &self,
-        f: &mut std::fmt::Formatter
-    ) -> Result<(), std::fmt::Error> {
-		let mut to_return = Ok(());
-
-		for y in (0..WIDTH) {
-			for x in (0..HEIGHT) {
-				to_return = to_return.and(write!(f, "{} ", self.get(x, y)));
-			}
-			to_return = to_return.and(write!(f, "\n"));
-		}
-		to_return
-	}
-}
-*/

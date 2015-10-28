@@ -13,9 +13,8 @@ macro_rules! exit {
         exit!(0)
     });
     ($status: expr) => ({
-        use ffi;
         unsafe {
-            ffi::_exit($status)
+            super::ffi::_exit($status)
         }
     });
 }
@@ -32,9 +31,11 @@ macro_rules! shm_getboard {
         }
     });
     ($key: expr) => ({
+        extern crate std;
+        use board::Board;
         shmget_id! (
             $key,
-            std::mem::size_of::<board::Board>()
+            std::mem::size_of::<Board>()
         )
     });
 }
@@ -51,10 +52,12 @@ macro_rules! shm_getboard_if_created {
         }
     });
     ($key: expr) => ({
+        extern crate std;
+        use board::Board;
         shmget! (
             $key,
             0o0666,
-            std::mem::size_of::<board::Board>()
+            std::mem::size_of::<Board>()
         )
     });
 }
