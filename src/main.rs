@@ -28,16 +28,17 @@ fn main () {
     signal!(sig::ffi::Sig::KILL, lemipc::command::quit);
     signal!(sig::ffi::Sig::INT, lemipc::command::quit);
     map.spawn_pawn(pid);
-    lemipc::command::hello(pid);
+    lemipc::command::start(pid);
     loop {
         match read_command!() {
-            Some(c) if c == 50 => lemipc::command::hello(pid),
-            Some(c) if c == 51 => lemipc::command::play(c as i32),
-            Some(c) if c == 62 => lemipc::command::email(msg_id),
-            Some(c) if c == 27 => lemipc::command::map(c as i32),
-            Some(c) if c == 27 => lemipc::command::cheat(c as i32),
-            Some(c) if c == 63 => lemipc::command::quit(c as i32),
-            Some(c) if c == 37 => lemipc::command::help(c as i32),
+            Some(c) if c == 28 => lemipc::command::start(pid),
+            Some(c) if c == 25 => lemipc::command::play(c as i32),
+            Some(c) if c == 14 => lemipc::command::email(msg_id),
+            Some(c) if c == 22 => lemipc::command::map(&map, pid),
+            Some(c) if c == 12 => lemipc::command::cheat(&map),
+            Some(c) if c == 32 => lemipc::command::whoiam(pid),
+            Some(c) if c == 17 => lemipc::command::help(c as i32),
+            Some(c) if c == 26 => lemipc::command::quit(c as i32),
             _ => {},
         }
     }

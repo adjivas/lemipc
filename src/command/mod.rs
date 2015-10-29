@@ -9,12 +9,13 @@ mod lib;
 
 pub use ffi;
 pub use self::lib::{
-    hello,
+    start,
     play,
     email,
     receive,
     map,
     cheat,
-    quit,
+    whoiam,
     help,
+    quit,
 };

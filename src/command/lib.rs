@@ -9,9 +9,9 @@ extern crate std;
 
 use board::Map;
 
-/// The `hello` function prints the first message of game.
+/// The `start` function prints the first message of game.
 
-pub fn hello (c: i32) {
+pub fn start (pid: i32) {
     let out = {
         " _                   ___\n\
         | |    ___ _ __ ___ |_ _|_ __   ___\n\
@@ -19,12 +19,15 @@ pub fn hello (c: i32) {
         | |__|  __/ | | | | || || |_) | (__ \n\
         |_____\\___|_| |_| |_|___| .__/ \\___|
                         |_|\n\
-        Welcome {pid}\n\n"
+        Welcome "
     };
 
     write!(out.as_ptr(), out.len());
-    help(c);
+    writeln_number!(pid);
+    help(0);
 }
+
+/// .
 
 pub fn play (_: i32) {
 }
@@ -60,10 +63,39 @@ pub fn receive (_: i32) {
     }
 }
 
-pub fn map (_: i32) {
+/// .
+
+pub fn map (map: &Map, pid: i32) {
+    map.put_grid_team(pid);
 }
 
-pub fn cheat (_: i32) {
+/// The `cheat` function prints all the map.
+
+pub fn cheat (map: &Map) {
+    map.put_grid_team(0);
+}
+
+/// The `whoiam` function prints the pid.
+
+pub fn whoiam (pid: i32) {
+    writeln_number!(pid);
+}
+
+/// The `help` function prints all commands of game.
+
+pub fn help (_: i32) {
+    let out = {
+        "/h, (hello) - Say hello!\n\
+        /p <compass>, (play) - advance to a direction\n\
+        /e <pid>, (email) - send a message to a friend\n\
+        /m, (map) - print your team map\n\
+        /c, (cheat) - print all the map\n\
+        /w, (whoiam) - print my name\n\
+        /h, (help) - print all commands\n\
+        /q, (quit) - exit the game\n\n"
+    };
+
+    write!(out.as_ptr(), out.len());
 }
 
 /// Dead dead dead !
@@ -86,20 +118,4 @@ pub fn quit (_: i32) {
     }
     shmdt!(addr);
     exit!();
-}
-
-/// The `help` function prints all commands of game.
-
-pub fn help (_: i32) {
-    let out = {
-        "/hello, /h - Say hello!\n\
-        /play, /p <compass> - advance to a direction\n\
-        /email, /e <pid> - send a message to a friend\n\
-        /map, /m - print your team map\n\
-        /cheat, /c - print all the map\n\
-        /quit, /q - exit the game\n\
-        /help, /h - print all commands\n\n"
-    };
-
-    write!(out.as_ptr(), out.len());
 }

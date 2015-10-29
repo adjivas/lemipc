@@ -7,17 +7,45 @@
 
 #![feature(macro_reexport)]
 
-#[macro_reexport(ftok, shmget_id, shmat, shmget, shmdt, shmctl)]
 #[macro_use]
+#[macro_reexport (
+    ftok,
+    shmget_id,
+    shmat,
+    shmget,
+    shmdt,
+    shmctl
+)]
 extern crate shm as shm_crate;
-#[macro_reexport(msgctl, msgget, msgsnd, msgrcv)]
+
 #[macro_use]
+#[macro_reexport (
+    msgctl,
+    msgget,
+    msgsnd,
+    msgrcv
+)]
 extern crate msg as msg_crate;
-#[macro_reexport(kill, signal, getpid)]
+
 #[macro_use]
+#[macro_reexport (
+    kill,
+    signal,
+    getpid
+)]
 extern crate sig as sig_crate;
-#[macro_reexport(read_command, read_character, read_number, read)]
+
 #[macro_use]
+#[macro_reexport (
+    read,
+    read_command,
+    read_character,
+    read_number,
+    write,
+    write_number,
+    write_character,
+    writeln_number,
+)]
 extern crate io as io_crate;
 
 pub mod shm {

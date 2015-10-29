@@ -6,6 +6,7 @@
 // except according to those terms.
 
 #![allow(dead_code)]
+
 extern crate std;
 
 use board::cell::Cell;
@@ -22,7 +23,7 @@ pub struct Map {
 
 impl Map {
 
-    /// The `get_pid` function returns the (pid, team) cell.
+    /// The `get` function returns the (pid, team) cell.
 
     pub fn get (
         &self,
@@ -137,13 +138,17 @@ impl Map {
     }
 
     fn search_pawn (
-        &mut self,
+        &self,
         pid: i32,
     ) -> Option<(bool, usize, usize)> {
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
                 return match self.get(x, y) {
-                    Some((id, team)) if id == pid => Some((team, x, y)),
+                    Some((id, team)) if id == pid => Some((
+                        team,
+                        x,
+                        y
+                    )),
                     _ => continue ,
                 }
             }
@@ -165,6 +170,48 @@ impl Map {
         }
         len
     }
+
+    fn found_team (
+        &self,
+        pid: i32,
+    ) -> Option<bool> {
+        match pid {
+            0 => None,
+            _ => {
+                match self.search_pawn(pid) {
+                    Some((team, _, _)) => Some(team),
+                    None => None,
+                }
+            },
+        }
+    }
+
+    pub fn put_grid_team (
+        &self,
+        pid: i32,
+    ) {
+        let team = self.found_team(pid);
+
+        for y in 0..self.grid.len() {
+            for x in 0..self.grid[y].len() {
+                match self.get(x, y) {
+                    Some((id, t)) if Some(t) == team ||
+                                     None == team => {
+                        write_number!(id);
+                    },
+                    Some((_, _)) => {
+                        write_character!('0');
+                    },
+                    None => {
+                        write_character!('_');
+                    },
+                };
+                write_character!(' ');
+            }
+            write_character!('\n');
+        }
+    }
+
 }
 
 impl Default for Map {
