@@ -10,6 +10,7 @@
 mod board;
 
 #[allow(unused_unsafe, unused_assignments)]
+#[cfg(feature = "signal")]
 fn main () {
     let pid: i32 = getpid!();
     let msg_id: i32 = msgget! (
@@ -28,18 +29,26 @@ fn main () {
     signal!(sig::ffi::Sig::KILL, lemipc::command::quit);
     signal!(sig::ffi::Sig::INT, lemipc::command::quit);
     map.spawn_pawn(pid);
-    lemipc::command::start(pid);
+    lemipc::command::start(&map, pid);
     loop {
         match read_command!() {
-            Some(c) if c == 28 => lemipc::command::start(pid),
+            Some(c) if c == 28 => lemipc::command::start(&map, pid),
             Some(c) if c == 25 => lemipc::command::play(c as i32),
             Some(c) if c == 14 => lemipc::command::email(msg_id),
+            Some(c) if c == 27 => lemipc::command::receive(c as i32),
             Some(c) if c == 22 => lemipc::command::map(&map, pid),
             Some(c) if c == 12 => lemipc::command::cheat(&map),
             Some(c) if c == 32 => lemipc::command::whoiam(pid),
+            Some(c) if c == 24 => lemipc::command::score(&map),
             Some(c) if c == 17 => lemipc::command::help(c as i32),
             Some(c) if c == 26 => lemipc::command::quit(c as i32),
             _ => {},
         }
     }
+}
+
+#[allow(unused_unsafe, unused_assignments)]
+#[cfg(not(feature = "signal"))]
+fn main () {
+    println!("The feature isn't activated :/");
 }

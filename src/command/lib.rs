@@ -11,7 +11,8 @@ use board::Map;
 
 /// The `start` function prints the first message of game.
 
-pub fn start (pid: i32) {
+pub fn start (map: &Map, pid: i32) {
+    let team = map.found_team(pid);
     let out = {
         " _                   ___\n\
         | |    ___ _ __ ___ |_ _|_ __   ___\n\
@@ -23,7 +24,14 @@ pub fn start (pid: i32) {
     };
 
     write!(out.as_ptr(), out.len());
-    writeln_number!(pid);
+    write_number!(pid);
+    write!(", your team is \0".as_ptr(), 16);
+    match team {
+        Some(true) => write!("<A>".as_ptr(), 3),
+        Some(false) => write!("<B>".as_ptr(), 3),
+        None => unimplemented!(),
+    };
+    write!(".\n\n".as_ptr(), 3);
     help(0);
 }
 
@@ -63,7 +71,8 @@ pub fn receive (_: i32) {
     }
 }
 
-/// .
+/// The `map` function prints the map according to
+/// the team of pid.
 
 pub fn map (map: &Map, pid: i32) {
     map.put_grid_team(pid);
@@ -81,18 +90,31 @@ pub fn whoiam (pid: i32) {
     writeln_number!(pid);
 }
 
+/// The `score` function prints the result of team.
+
+pub fn score (map: &Map) {
+    let [a, b] = map.get_score();
+
+    write!("A-B ".as_ptr(), 4);
+    write_number!(a);
+    write_character!('-');
+    writeln_number!(b);
+}
+
 /// The `help` function prints all commands of game.
 
 pub fn help (_: i32) {
     let out = {
         "/h, (hello) - Say hello!\n\
-        /p <compass>, (play) - advance to a direction\n\
-        /e <pid>, (email) - send a message to a friend\n\
-        /m, (map) - print your team map\n\
-        /c, (cheat) - print all the map\n\
-        /w, (whoiam) - print my name\n\
-        /h, (help) - print all commands\n\
-        /q, (quit) - exit the game\n\n"
+        /p <compass>, (play) - advance to a direction.\n\
+        /e <pid> <message>, (email) - send a message to a friend.\n\
+        /r, (receive) - read a message from a friend.\n\
+        /m, (map) - print your team map.\n\
+        /c, (cheat) - print all the map.\n\
+        /w, (who i am) - print my name.\n\
+        /o, (score) - print my score.\n\
+        /h, (help) - print all commands.\n\
+        /q, (quit) - exit the game.\n\n"
     };
 
     write!(out.as_ptr(), out.len());
@@ -101,6 +123,7 @@ pub fn help (_: i32) {
 /// Dead dead dead !
 
 pub fn quit (_: i32) {
+    let pid: i32 = getpid!();
     let id = shm_getboard_if_created!().unwrap();
     let addr = shmat!(id).unwrap();
     let board: &mut Map = {
@@ -109,9 +132,8 @@ pub fn quit (_: i32) {
         }
     };
 
-    board.dead_pawn (
-        getpid!()
-    );
+    board.dead_pawn(pid);
+    score(&board);
     if board.len_pawn() == 0 {
         shmctl!(id, shm::ffi::Ipc::RMID);
         msgctl!(id, msg::ffi::Ipc::RMID);

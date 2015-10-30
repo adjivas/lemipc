@@ -6,6 +6,7 @@
 // except according to those terms.
 
 #![feature(macro_reexport)]
+#![feature(slice_patterns)]
 
 #[macro_use]
 #[macro_reexport (
@@ -44,6 +45,7 @@ extern crate sig as sig_crate;
     write,
     write_number,
     write_character,
+    writeln,
     writeln_number,
 )]
 extern crate io as io_crate;

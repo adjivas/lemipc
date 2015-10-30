@@ -15,3 +15,6 @@ git = "https://github.com/adjivas/msg.git"
 
 [dependencies.io]
 git = "https://github.com/adjivas/io.git"
+
+[features]
+signal = []

@@ -16,6 +16,7 @@ pub use self::lib::{
     map,
     cheat,
     whoiam,
+    score,
     help,
     quit,
 };

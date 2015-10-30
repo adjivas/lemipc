@@ -93,19 +93,8 @@ impl Map {
         team: bool,
     ) {
         match team {
-            true  => self.score[0] += 1,
-            false => self.score[1] += 1,
-        }
-    }
-
-    fn add_pawn (
-        &mut self,
-        pid: i32,
-        x: usize,
-        y: usize,
-    ) -> bool {
-        match self.len_pawn() % 2 == 0 {
-            team => self.set(x, y, pid, team),
+            true  => self.score[1] += 1,
+            false => self.score[0] += 1,
         }
     }
 
@@ -113,10 +102,21 @@ impl Map {
         &mut self,
         pid: i32,
     ) -> bool {
-        for y in 0..self.grid.len() {
-            for x in 0..self.grid[y].len() {
+        let team = self.len_pawn() % 2 == 0;
+        let iter_y = match team {
+            true => (0..self.grid.len()).collect::<Vec<_>>(),
+            false => (0..self.grid.len()).rev().collect::<Vec<_>>(),
+        };
+
+        for y in iter_y {
+            let iter_x = match team {
+                true => (0..self.grid[y].len()).collect::<Vec<_>>(),
+                false => (0..self.grid[y].len()).rev().collect::<Vec<_>>(),
+            };
+
+            for x in iter_x {
                 return match self.get_pid(x, y) {
-                    None => self.add_pawn(pid, x, y),
+                    None => self.set(x, y, pid, team),
                     _ => continue ,
                 }
             }
@@ -171,7 +171,7 @@ impl Map {
         len
     }
 
-    fn found_team (
+    pub fn found_team (
         &self,
         pid: i32,
     ) -> Option<bool> {
