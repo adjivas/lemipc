@@ -35,6 +35,15 @@ pub fn start (map: &Map, pid: i32) {
     help(0);
 }
 
+/// The `turn` function informs the user that he must play.
+
+pub fn turn (_: i32) {
+    let pid: i32 = getpid!();
+
+    write_number!(pid);
+    write!(", play!".as_ptr(), 7);
+}
+
 /// .
 
 pub fn play (_: i32) {
@@ -46,9 +55,14 @@ pub fn play (_: i32) {
 pub fn email (id: i32) {
     match read_number!() {
         Some(at) => match read!() {
+            #[cfg(feature = "signal")]
             Some((_, line)) => {
                 msgsnd!(id, at, &line);
                 kill!(at, sig::ffi::Sig::USR1);
+            },
+            #[cfg(not(feature = "signal"))]
+            Some((_, line)) => {
+                msgsnd!(id, at, &line);
             },
             None => { write_err!("msg: invalid message.".as_ptr()); },
         },
@@ -124,8 +138,8 @@ pub fn help (_: i32) {
 
 pub fn quit (_: i32) {
     let pid: i32 = getpid!();
-    let id = shm_getboard_if_created!().unwrap();
-    let addr = shmat!(id).unwrap();
+    let id = shm_getboard_if_created!().expect("shm_getboard_if_created! unwork");
+    let addr = shmat!(id).expect("shmat! unwork");
     let board: &mut Map = {
         unsafe {
             std::mem::transmute(addr)

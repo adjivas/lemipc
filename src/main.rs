@@ -14,11 +14,11 @@ mod board;
 fn main () {
     let pid: i32 = getpid!();
     let msg_id: i32 = msgget! (
-        ftok!().unwrap()
-    ).unwrap();
+        ftok!().expect("ftok! unwork")
+    ).expect("msgget! unwork");
     let map: &mut lemipc::board::Map = {
-        let id = shm_getboard!().unwrap();
-        let addr = shmat!(id).unwrap();
+        let id = shm_getboard!().expect("shm_getboard! unwork");
+        let addr = shmat!(id).expect("shmat! unwork");
 
         unsafe {
             std::mem::transmute(addr)
@@ -26,6 +26,7 @@ fn main () {
     };
 
     signal!(sig::ffi::Sig::USR1, lemipc::command::receive);
+    signal!(sig::ffi::Sig::USR2, lemipc::command::turn);
     signal!(sig::ffi::Sig::KILL, lemipc::command::quit);
     signal!(sig::ffi::Sig::INT, lemipc::command::quit);
     map.spawn_pawn(pid);
@@ -50,5 +51,36 @@ fn main () {
 #[allow(unused_unsafe, unused_assignments)]
 #[cfg(not(feature = "signal"))]
 fn main () {
-    println!("The feature isn't activated :/");
+    let pid: i32 = getpid!();
+    let msg_id: i32 = msgget! (
+        ftok!().expect("ftok! unwork")
+    ).expect("msgget! unwork");
+    let map: &mut lemipc::board::Map = {
+        let id = shm_getboard!().expect("shm_getboard! unwork");
+        let addr = shmat!(id).expect("shmat! unwork");
+
+        unsafe {
+            std::mem::transmute(addr)
+        }
+    };
+
+    signal!(sig::ffi::Sig::KILL, lemipc::command::quit);
+    signal!(sig::ffi::Sig::INT, lemipc::command::quit);
+    map.spawn_pawn(pid);
+    lemipc::command::start(&map, pid);
+    loop {
+        match read_command!() {
+            Some(c) if c == 28 => lemipc::command::start(&map, pid),
+            Some(c) if c == 25 => lemipc::command::play(c as i32),
+            Some(c) if c == 14 => lemipc::command::email(msg_id),
+            Some(c) if c == 27 => lemipc::command::receive(c as i32),
+            Some(c) if c == 22 => lemipc::command::map(&map, pid),
+            Some(c) if c == 12 => lemipc::command::cheat(&map),
+            Some(c) if c == 32 => lemipc::command::whoiam(pid),
+            Some(c) if c == 24 => lemipc::command::score(&map),
+            Some(c) if c == 17 => lemipc::command::help(c as i32),
+            Some(c) if c == 26 => lemipc::command::quit(c as i32),
+            _ => {},
+        }
+    }
 }

@@ -10,6 +10,7 @@ mod lib;
 pub use ffi;
 pub use self::lib::{
     start,
+    turn,
     play,
     email,
     receive,

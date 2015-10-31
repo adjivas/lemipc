@@ -6,8 +6,15 @@
 #### How to build:
 ```shell
 git clone https://github.com/adjivas/lemipc.git lem-ipc && cd lem-ipc
-cargo build
+- cargo run // whiteout feature.
+- cargo build --features signal // white the signal' feature.
 ```
+
+#### How to run:
+Whiteout feature:
+- cargo run.
+white the signal' feature:
+- cargo run --features signal
 
 #### Directory-Tree:
 ```shell
@@ -17,13 +24,14 @@ cargo build
 |__ README.md
 \__ src
     |__ board
-    |   |__ mod.rs
-    |   \__ lib.rs
+    |   |__ cell.rs
+    |   |__ map.rs
+    |   \__ mod.rs
     |__ command
-    |   |__ mod.rs
     |   \__ lib.rs
-    |__ ffi.rs
+    |   \__ mod.rs
     |__ macros.rs
+    |__ ffi.rs
     \__ lib.rs
 ```
 

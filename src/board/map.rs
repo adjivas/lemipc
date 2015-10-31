@@ -19,6 +19,7 @@ const HEIGHT: usize = 4;
 pub struct Map {
     grid: [[Cell; WIDTH]; HEIGHT],
     score: [usize; 2],
+    turn: Cell,
 }
 
 impl Map {
@@ -223,6 +224,7 @@ impl Default for Map {
         Map {
             grid: [[Default::default(); WIDTH]; HEIGHT],
             score: [0usize; 2],
+            turn: Default::default(),
         }
     }
 }
