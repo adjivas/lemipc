@@ -8,11 +8,15 @@
 extern crate std;
 
 use board::Map;
+use command::Compass;
 
 /// The `start` function prints the first message of game.
 
-pub fn start (map: &Map, pid: i32) {
-    let team = map.found_team(pid);
+pub fn start <'a> (
+    board: &'a Map,
+    pid: i32
+) {
+    let team = board.found_team(pid);
     let out = {
         " _                   ___\n\
         | |    ___ _ __ ___ |_ _|_ __   ___\n\
@@ -25,7 +29,7 @@ pub fn start (map: &Map, pid: i32) {
 
     write!(out.as_ptr(), out.len());
     write_number!(pid);
-    write!(", your team is \0".as_ptr(), 16);
+    write!(", your team is ".as_ptr(), 15);
     match team {
         Some(true) => write!("<A>".as_ptr(), 3),
         Some(false) => write!("<B>".as_ptr(), 3),
@@ -35,18 +39,71 @@ pub fn start (map: &Map, pid: i32) {
     help(0);
 }
 
-/// The `turn` function informs the user that he must play.
+/// The `turn` function informs the user who must play.
 
+#[cfg(not(feature = "signal"))]
+pub fn turn <'a> (
+    board: &'a Map
+) {
+    let pid: i32 = board.get_turn();
+
+    write_number!(pid);
+    write!(".\n".as_ptr(), 2);
+}
+
+/// The `turn` function informs the user who must play.
+
+#[cfg(feature = "signal")]
 pub fn turn (_: i32) {
     let pid: i32 = getpid!();
 
     write_number!(pid);
-    write!(", play!".as_ptr(), 7);
+    write!(" must play.\n".as_ptr(), 12);
 }
 
-/// .
+/// The `play` function checks if the user can play,
+/// if yes the pawn is moved.
 
-pub fn play (_: i32) {
+#[cfg(not(feature = "signal"))]
+pub fn play <'a> (
+    board: &'a mut Map,
+    pid: i32
+) {
+    if let Some(character) = read_character!() {
+        match Compass::new(character) {
+            Some(compass) => {
+                board.play_pawn(pid, compass);
+                map(board, pid);
+            },
+            _ => {
+                write_err!("play: invalid compass.\n\0".as_ptr());
+            },
+        }
+    }
+}
+/// The `play` function checks if the user can play,
+/// if yes the pawn is moved.
+
+#[cfg(feature = "signal")]
+pub fn play <'a> (
+    board: &'a mut Map,
+    pid: i32
+) {
+    if let Some(character) = read_character!() {
+        if let Some(pid_next) = match read_character!() {
+            Some(compass) if compass == Compass::NORTH ||
+                             compass == Compass::EAST  ||
+                             compass == Compass::SOUTH ||
+                             compass == Compass::WEST  => board.play_pawn(pid, compass),
+            _ => {
+                write_err!("play: invalid compass.\n\0".as_ptr());
+                None
+            },
+        } {
+            map(board, pid);
+            kill!(pid_next, sig::ffi::Sig::USR2);
+        }
+    }
 }
 
 /// The `email` function sends a message.
@@ -64,12 +121,11 @@ pub fn email (id: i32) {
             Some((_, line)) => {
                 msgsnd!(id, at, &line);
             },
-            None => { write_err!("msg: invalid message.".as_ptr()); },
+            None => { write_err!("email: invalid message.\n\0".as_ptr()); },
         },
-        None => { write_err!("msg: invalid number.".as_ptr()); },
+        None => { write_err!("email: invalid number.\n\0".as_ptr()); },
     }
 }
-
 /// The `receive` function takes and prints the last message.
 
 #[allow(unused_unsafe, unused_assignments)]
@@ -88,14 +144,17 @@ pub fn receive (_: i32) {
 /// The `map` function prints the map according to
 /// the team of pid.
 
-pub fn map (map: &Map, pid: i32) {
-    map.put_grid_team(pid);
+pub fn map <'a> (
+    board: &'a Map,
+    pid: i32
+) {
+    board.put_grid_team(pid);
 }
 
 /// The `cheat` function prints all the map.
 
-pub fn cheat (map: &Map) {
-    map.put_grid_team(0);
+pub fn cheat <'a> (board: &'a Map) {
+    board.put_grid_team(0);
 }
 
 /// The `whoiam` function prints the pid.
@@ -106,8 +165,8 @@ pub fn whoiam (pid: i32) {
 
 /// The `score` function prints the result of team.
 
-pub fn score (map: &Map) {
-    let [a, b] = map.get_score();
+pub fn score <'a> (board: &'a Map) {
+    let [a, b] = board.get_score();
 
     write!("A-B ".as_ptr(), 4);
     write_number!(a);
@@ -120,7 +179,8 @@ pub fn score (map: &Map) {
 pub fn help (_: i32) {
     let out = {
         "/h, (hello) - Say hello!\n\
-        /p <compass>, (play) - advance to a direction.\n\
+        /t, (turn)  - inform about who must play.\n\
+        /p <compass>, (play [n, e, s, w])  - advance to a direction.\n\
         /e <pid> <message>, (email) - send a message to a friend.\n\
         /r, (receive) - read a message from a friend.\n\
         /m, (map) - print your team map.\n\
@@ -138,8 +198,8 @@ pub fn help (_: i32) {
 
 pub fn quit (_: i32) {
     let pid: i32 = getpid!();
-    let id = shm_getboard_if_created!().expect("shm_getboard_if_created! unwork");
-    let addr = shmat!(id).expect("shmat! unwork");
+    let id = shm_getboard_if_created!().expect("shm_getboard_if_created! fail");
+    let addr = shmat!(id).expect("shmat! fail");
     let board: &mut Map = {
         unsafe {
             std::mem::transmute(addr)

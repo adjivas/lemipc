@@ -5,19 +5,10 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
-mod lib;
+mod compass;
+mod run;
 
 pub use ffi;
-pub use self::lib::{
-    start,
-    turn,
-    play,
-    email,
-    receive,
-    map,
-    cheat,
-    whoiam,
-    score,
-    help,
-    quit,
-};
+
+pub use self::compass::*;
+pub use self::run::*;
