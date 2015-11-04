@@ -31,8 +31,9 @@ macro_rules! shm_getboard {
         }
     });
     ($key: expr) => ({
+        extern crate lemipc;
         extern crate std;
-        use board::Map;
+
         shmget_id! (
             $key,
             std::mem::size_of::<Map>()
@@ -53,7 +54,7 @@ macro_rules! shm_getboard_if_created {
     });
     ($key: expr) => ({
         extern crate std;
-        use board::Map;
+
         shmget! (
             $key,
             0o0666,

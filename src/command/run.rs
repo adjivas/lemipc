@@ -14,7 +14,7 @@ use command::Compass;
 
 pub fn start <'a> (
     board: &'a Map,
-    pid: i32
+    pid: i32,
 ) {
     let team = board.found_team(pid);
     let out = {
@@ -43,7 +43,7 @@ pub fn start <'a> (
 
 #[cfg(not(feature = "signal"))]
 pub fn turn <'a> (
-    board: &'a Map
+    board: &'a Map,
 ) {
     let pid: i32 = board.get_turn();
 
@@ -67,41 +67,40 @@ pub fn turn (_: i32) {
 #[cfg(not(feature = "signal"))]
 pub fn play <'a> (
     board: &'a mut Map,
-    pid: i32
+    pid: i32,
 ) {
     if let Some(character) = read_character!() {
         match Compass::new(character) {
-            Some(compass) => {
-                board.play_pawn(pid, compass);
-                map(board, pid);
+            Some(compass) => match board.play_pawn(pid, compass) {
+                Ok(_) => {
+                    map(board, pid);
+                },
+                Err(why) => { write_err!(why.as_ptr()); },
             },
-            _ => {
-                write_err!("play: invalid compass.\n\0".as_ptr());
-            },
+            _ => { write_err!("play: invalid compass.\n\0".as_ptr()); },
         }
     }
 }
+
 /// The `play` function checks if the user can play,
 /// if yes the pawn is moved.
 
 #[cfg(feature = "signal")]
 pub fn play <'a> (
     board: &'a mut Map,
-    pid: i32
+    pid: i32,
 ) {
     if let Some(character) = read_character!() {
-        if let Some(pid_next) = match read_character!() {
-            Some(compass) if compass == Compass::NORTH ||
-                             compass == Compass::EAST  ||
-                             compass == Compass::SOUTH ||
-                             compass == Compass::WEST  => board.play_pawn(pid, compass),
-            _ => {
-                write_err!("play: invalid compass.\n\0".as_ptr());
-                None
+        match Compass::new(character) {
+            Some(compass) => match board.play_pawn(pid, compass) {
+                Ok(true) => {
+                    map(board, pid);
+                    kill!(board.get_turn(), sig::ffi::Sig::USR2);
+                },
+                Ok(false) => { kill!(board.get_turn(), sig::ffi::Sig::USR2); },
+                Err(why) => { write_err!(why.as_ptr()); },
             },
-        } {
-            map(board, pid);
-            kill!(pid_next, sig::ffi::Sig::USR2);
+            _ => { write_err!("play: invalid compass.\n\0".as_ptr()); },
         }
     }
 }
@@ -146,7 +145,7 @@ pub fn receive (_: i32) {
 
 pub fn map <'a> (
     board: &'a Map,
-    pid: i32
+    pid: i32,
 ) {
     board.put_grid_team(pid);
 }

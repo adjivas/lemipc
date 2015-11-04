@@ -5,7 +5,11 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//use command::Compass::*;
+/// IPC - compass help
+///
+///           n
+/// use: p  w   e
+///           s
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Compass {
@@ -16,6 +20,9 @@ pub enum Compass {
 }
 
 impl Compass {
+
+    /// The `new` constructor function retuns
+    /// the compass direction.
     pub fn new (character: i8) -> Option<Self> {
         return match character {
             110 => Some(Compass::NORTH),

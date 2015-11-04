@@ -10,5 +10,5 @@ mod run;
 
 pub use ffi;
 
-pub use self::compass::*;
+pub use self::compass::Compass;
 pub use self::run::*;

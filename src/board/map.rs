@@ -15,11 +15,6 @@ use command::Compass;
 const WIDTH: usize = 4;
 const HEIGHT: usize = 4;
 
-pub const NORTH: i8 = 110;
-pub const EAST: i8 = 101;
-pub const SOUTH: i8 = 115;
-pub const WEST: i8 = 119;
-
 /// The `Map` structure defines the grid and the score.
 
 pub struct Map {
@@ -111,62 +106,82 @@ impl Map {
         }
     }
 
+    /// The `to_next` function updates the turn of player.
+
     fn to_next <'a> (
         &'a mut self,
         pid: i32,
-    ) -> Option<i32> {
-        let mut min_after_pid: Option<i32> = None;
+    ) {
+        let mut after: i32 = 0;
+        let mut first: i32 = 0;
 
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
-                min_after_pid = match (min_after_pid, self.get(x, y)) {
-                    (None, Some((id, _))) if pid < id => Some(id),
-                    (
-                        Some(max),
-                        Some((id, _))
-                    ) if pid < id && id < max => Some(id),
-                    _ => continue ,
+                if let Some((id, _)) = self.get(x, y) {
+                    if id < after
+                    && id > pid
+                    || after == 0
+                    && id > pid {
+                        after = id;
+                    }
+                    if first > id
+                    || first == 0 {
+                        first = id;
+                    }
                 }
             }
         }
-        if let Some(pid_next) = min_after_pid {
-            self.turn = pid_next;
+        self.turn = match (first, after) {
+            (first, after) if pid == after => first,
+            (first, 0) if first > 0 => first,
+            (_, after) if after > 0 => after,
+            (_, _) => unimplemented!(),
         }
-        min_after_pid
     }
+
+    /// The `play_pawn` function reverses a empty
+    /// position with a pawn.
+
+    fn swap_with_team <'a> (
+        &'a mut self,
+        (x, y): (usize, usize),
+        (to_x, to_y, pid, team): (usize, usize, i32, bool),
+    ) -> Result<bool, &'static str> {
+        if self.get_team(to_x, to_y).is_none() {
+            self.to_next(pid);
+            Ok(self.unset(x, y) && self.set(to_x, to_y, pid, team))
+        }
+        else {
+            Err("forbidden movement!\n\0")
+        }
+    }
+
+    /// The `play_pawn` function moves the pawn.
 
     pub fn play_pawn <'a> (
         &'a mut self,
         pid: i32,
         compass: Compass,
-    ) -> Option<i32> {
+    ) -> Result<bool, &'static str> {
         if self.turn == pid {
-            /*if let Some ((
-                (team, to_x, to_y), (x, y)
-            )) = match (compass, self.search_pawn(pid)) {
-                (command::Compass::NORTH, Some((team, x, y))) if y > 0 => Some ((
-                    (team, x, y-1), (x, y)
-                )),
-                (command::Compass::EAST, Some((team, x, y))) if x > 0 => Some ((
-                    (team, x-1, y), (x, y)
-                )),
-                (command::Compass::SOUTH, Some((team, x, y))) if x < {WIDTH-1} => Some ((
-                    (team, x+1, y), (x, y)
-                )),
-                (command::Compass::WEST, Some((team, x, y))) if y < {HEIGHT-1} => Some ((
-                    (team, x, y+1), (x, y)
-                )),
-                _ => None,
-            } {
-                self.unset(x, y);
-                self.set(to_x, to_y, pid, team);
-                let pid = self.to_next(pid);
-                println!("local {:?}", pid);
-                return pid
-            }*/
+            match (compass, self.search_pawn(pid)) {
+                (Compass::NORTH, Some((team, x, y))) if y > 0 =>
+                    self.swap_with_team((x, y), (x, y-1, pid, team)),
+                (Compass::EAST, Some((team, x, y))) if x < {WIDTH-1} =>
+                    self.swap_with_team((x, y), (x+1, y, pid, team)),
+                (Compass::SOUTH, Some((team, x, y))) if y < {HEIGHT-1} =>
+                    self.swap_with_team((x, y), (x, y+1, pid, team)),
+                (Compass::WEST, Some((team, x, y))) if x > 0 =>
+                    self.swap_with_team((x, y), (x-1, y, pid, team)),
+                _ => Err("unvalid movement.\n\0"),
+            }
         }
-        None
+        else {
+            Err("It's yet your turn.\n\0")
+        }
     }
+
+    /// The `spawn_pawn` function spawns a new pawn.
 
     pub fn spawn_pawn <'a> (
         &'a mut self,
@@ -197,6 +212,9 @@ impl Map {
         false
     }
 
+    /// The `dead_pawn` function removes a pawn
+    /// and updates the turn of next pawn.
+
     pub fn dead_pawn <'a> (
         &'a mut self,
         pid: i32,
@@ -204,11 +222,15 @@ impl Map {
         match self.search_pawn(pid) {
             Some((team, x, y)) => {
                 self.set_score(team);
+                self.to_next(pid);
                 self.unset(x, y)
             },
             None => false,
         }
     }
+
+    /// The `search_pawn` founds information
+    /// on pawn according to pid.
 
     fn search_pawn <'a> (
         &'a self,
@@ -229,20 +251,8 @@ impl Map {
         None
     }
 
-    pub fn len_pawn <'a> (
-        &'a self,
-    ) -> usize {
-        let mut len: usize = 0;
-
-        for y in 0..self.grid.len() {
-            for x in 0..self.grid[y].len() {
-                if let Some(_) = self.get_pid(x, y) {
-                    len += 1;
-                }
-            }
-        }
-        len
-    }
+    /// The `found_team` returns the team
+    /// of pawn according to pid.
 
     pub fn found_team <'a> (
         &'a self,
@@ -258,6 +268,26 @@ impl Map {
             },
         }
     }
+
+    /// The `len_pawn` counts the number of pawn.
+
+    pub fn len_pawn <'a> (
+        &'a self,
+    ) -> usize {
+        let mut len: usize = 0;
+
+        for y in 0..self.grid.len() {
+            for x in 0..self.grid[y].len() {
+                if let Some(_) = self.get_pid(x, y) {
+                    len += 1;
+                }
+            }
+        }
+        len
+    }
+
+    /// The `put_grid_team` prints the grid
+    /// with a limited vision of team.
 
     pub fn put_grid_team <'a> (
         &'a self,
