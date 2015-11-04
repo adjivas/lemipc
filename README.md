@@ -6,7 +6,7 @@
 #### How to build:
 ```shell
 git clone https://github.com/adjivas/lemipc.git lem-ipc && cd lem-ipc
-- cargo run // Without feature.
+- cargo build // Without feature.
 - cargo build --features signal // With the signal' feature.
 ```
 
