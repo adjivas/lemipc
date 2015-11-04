@@ -32,18 +32,19 @@ fn main () {
     board.spawn_pawn(pid);
     lemipc::command::start(&board, pid);
     loop {
-        match read_command!() {
-            Some(c) if c == 28 => lemipc::command::start(&board, pid),
-            Some(c) if c == 29 => lemipc::command::turn(c as i32),
-            Some(c) if c == 25 => lemipc::command::play(&mut board, pid),
-            Some(c) if c == 14 => lemipc::command::email(msg_id),
-            Some(c) if c == 27 => lemipc::command::receive(c as i32),
-            Some(c) if c == 22 => lemipc::command::map(&board, pid),
-            Some(c) if c == 12 => lemipc::command::cheat(&board),
-            Some(c) if c == 32 => lemipc::command::whoiam(pid),
-            Some(c) if c == 24 => lemipc::command::score(&board),
-            Some(c) if c == 17 => lemipc::command::help(c as i32),
-            Some(c) if c == 26 => lemipc::command::quit(c as i32),
+        match (board.count_enemy(pid), read_command!()) {
+            (Some(e), _) if e >=  2 => lemipc::command::quit(e as i32),
+            (_, Some(c)) if c == 28 => lemipc::command::start(&board, pid),
+            (_, Some(c)) if c == 29 => lemipc::command::turn(c as i32),
+            (_, Some(c)) if c == 25 => lemipc::command::play(&mut board, pid),
+            (_, Some(c)) if c == 14 => lemipc::command::email(msg_id),
+            (_, Some(c)) if c == 27 => lemipc::command::receive(c as i32),
+            (_, Some(c)) if c == 22 => lemipc::command::map(&board, pid),
+            (_, Some(c)) if c == 12 => lemipc::command::cheat(&board),
+            (_, Some(c)) if c == 32 => lemipc::command::whoiam(pid),
+            (_, Some(c)) if c == 24 => lemipc::command::score(&board),
+            (_, Some(c)) if c == 17 => lemipc::command::help(c as i32),
+            (_, Some(c)) if c == 26 => lemipc::command::quit(c as i32),
             _ => {},
         }
     }
@@ -70,18 +71,19 @@ fn main () {
     board.spawn_pawn(pid);
     lemipc::command::start(&board, pid);
     loop {
-        match read_command!() {
-            Some(c) if c == 28 => lemipc::command::start(&board, pid),
-            Some(c) if c == 29 => lemipc::command::turn(&board),
-            Some(c) if c == 25 => lemipc::command::play(&mut board, pid),
-            Some(c) if c == 14 => lemipc::command::email(msg_id),
-            Some(c) if c == 27 => lemipc::command::receive(c as i32),
-            Some(c) if c == 22 => lemipc::command::map(&board, pid),
-            Some(c) if c == 12 => lemipc::command::cheat(&board),
-            Some(c) if c == 32 => lemipc::command::whoiam(pid),
-            Some(c) if c == 24 => lemipc::command::score(&board),
-            Some(c) if c == 17 => lemipc::command::help(c as i32),
-            Some(c) if c == 26 => lemipc::command::quit(c as i32),
+        match (board.count_enemy(pid), read_command!()) {
+            (Some(e), _) if e >=  2 => lemipc::command::quit(e as i32),
+            (_, Some(c)) if c == 28 => lemipc::command::start(&board, pid),
+            (_, Some(c)) if c == 29 => lemipc::command::turn(&board),
+            (_, Some(c)) if c == 25 => lemipc::command::play(&mut board, pid),
+            (_, Some(c)) if c == 14 => lemipc::command::email(msg_id),
+            (_, Some(c)) if c == 27 => lemipc::command::receive(c as i32),
+            (_, Some(c)) if c == 22 => lemipc::command::map(&board, pid),
+            (_, Some(c)) if c == 12 => lemipc::command::cheat(&board),
+            (_, Some(c)) if c == 32 => lemipc::command::whoiam(pid),
+            (_, Some(c)) if c == 24 => lemipc::command::score(&board),
+            (_, Some(c)) if c == 17 => lemipc::command::help(c as i32),
+            (_, Some(c)) if c == 26 => lemipc::command::quit(c as i32),
             _ => {},
         }
     }

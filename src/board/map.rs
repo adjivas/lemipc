@@ -5,15 +5,14 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![allow(dead_code)]
-
 extern crate std;
 
 use board::Cell;
 use command::Compass;
 
-const WIDTH: usize = 4;
-const HEIGHT: usize = 4;
+use super::WIDTH;
+use super::HEIGHT;
+use super::VISION;
 
 /// The `Map` structure defines the grid and the score.
 
@@ -229,6 +228,34 @@ impl Map {
         }
     }
 
+    /// The `count_enemy` function returns the
+    /// number of enemy around one pawn.
+
+    pub fn count_enemy <'a> (
+        &'a self,
+        pid: i32,
+    ) -> Option<usize> {
+        let mut enemy: usize = 0;
+
+        match self.search_pawn(pid) {
+            Some((team, x, y)) => {
+                for y in ({(y as isize)-VISION}..{(y as isize)+VISION+1}).filter(|&y|
+                    y >= 0 && y < self.grid.len() as isize
+                ) {
+                    for x in ({(x as isize)-VISION}..{(x as isize)+VISION+1}).filter(|&x|
+                        x >= 0 && x < self.grid[y as usize].len() as isize
+                    ) {
+                        if self.get_team(x as usize, y as usize) == Some(!team) {
+                            enemy += 1;
+                        }
+                    }
+                }
+                Some(enemy)
+            },
+            None => None,
+        }
+    }
+
     /// The `search_pawn` founds information
     /// on pawn according to pid.
 
@@ -239,11 +266,7 @@ impl Map {
         for y in 0..self.grid.len() {
             for x in 0..self.grid[y].len() {
                 return match self.get(x, y) {
-                    Some((id, team)) if id == pid => Some((
-                        team,
-                        x,
-                        y
-                    )),
+                    Some((id, team)) if id == pid => Some((team, x, y)),
                     _ => continue ,
                 }
             }

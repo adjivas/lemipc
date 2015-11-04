@@ -5,8 +5,6 @@
 // This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![allow(dead_code)]
-
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Cell {
     Empty,
