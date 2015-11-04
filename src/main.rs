@@ -7,8 +7,6 @@
 
 #[macro_use] extern crate lemipc;
 
-use lemipc::board::Map;
-
 #[allow(unused_unsafe, unused_assignments)]
 #[cfg(feature = "signal")]
 fn main () {

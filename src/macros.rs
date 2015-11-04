@@ -33,10 +33,9 @@ macro_rules! shm_getboard {
     ($key: expr) => ({
         extern crate lemipc;
         extern crate std;
-
         shmget_id! (
             $key,
-            std::mem::size_of::<Map>()
+            std::mem::size_of::<lemipc::board::Map>()
         )
     });
 }
