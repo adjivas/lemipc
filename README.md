@@ -1,12 +1,8 @@
 # Lem-Ipc
 
-[![Build Status](https://travis-ci.org/adjivas/lemipc.svg)](https://travis-ci.org/adjivas/lemipc)
 [![GPLv3 License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
-
-#### To do:
-1. Implement semaphore.
-2. Submodule.
-3. Neko, video or Documentation.
+[![Build Status](https://travis-ci.org/adjivas/lemipc.svg)](https://travis-ci.org/adjivas/lemipc)
+[![Circle CI](https://circleci.com/gh/adjivas/lemipc/tree/master.svg?style=svg)](https://circleci.com/gh/adjivas/lemipc/tree/master)
 
 #### How to build:
 ```shell
@@ -66,8 +62,8 @@ U __register_atfork@@GLIBC_2.3.2
 U __tls_get_addr@@GLIBC_2.3
 U _exit@@GLIBC_2.2.5
 U abort@@GLIBC_2.2.5
-U bsearch@@GLIBC_2.2.5
 U close@@GLIBC_2.2.5
+U bsearch@@GLIBC_2.2.5
 U dl_iterate_phdr@@GLIBC_2.2.5
 U fcntl@@GLIBC_2.2.5
 U ftok@@GLIBC_2.2.5
