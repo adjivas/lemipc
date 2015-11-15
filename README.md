@@ -1,7 +1,6 @@
 # Lem-Ipc
 
-[![GPLv3 License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
-[![Build Status](https://travis-ci.org/adjivas/lemipc.svg)](https://travis-ci.org/adjivas/lemipc)
+[![travis-badge][]][travis] [![docs-badge][]][docs] [![license-badge][]][license]
 
 #### How to build:
 ```shell
@@ -124,4 +123,11 @@ U write@@GLIBC_2.2.5
 ```
 
 #### License:
-*lemipc*'s code in this repo uses the [GNU GPL v3](http://www.gnu.org/licenses/gpl-3.0.html) [license](https://github.com/adjivas/lemipc/blob/master/LICENSE).
+*lemipc*'s code in this repo uses the [GNU GPL v3](http://www.gnu.org/licenses/gpl-3.0.html) [license][license].
+
+[travis-badge]: https://travis-ci.org/adjivas/lemipc.svg?style=flat-square
+[travis]: https://travis-ci.org/adjivas/lemipc
+[docs-badge]: https://img.shields.io/badge/API-docs-blue.svg?style=flat-square
+[docs]: http://adjivas.github.io/lemipc/lemipc
+[license-badge]: http://img.shields.io/badge/license-GPLv3-blue.svg?style=flat-square
+[license]: https://github.com/adjivas/lemipc/blob/master/LICENSE
