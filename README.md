@@ -2,7 +2,6 @@
 
 [![GPLv3 License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
 [![Build Status](https://travis-ci.org/adjivas/lemipc.svg)](https://travis-ci.org/adjivas/lemipc)
-[![Circle CI](https://circleci.com/gh/adjivas/lemipc/tree/master.svg?style=svg)](https://circleci.com/gh/adjivas/lemipc/tree/master)
 
 #### How to build:
 ```shell
