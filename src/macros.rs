@@ -61,3 +61,33 @@ macro_rules! shm_getboard_if_created {
         )
     });
 }
+
+/// The `ipc_getlem` returns and inits the tuple (msg, sem, shm).
+
+#[macro_export]
+macro_rules! ipc_getlem {
+    () => ({
+        (
+            {
+                msgget! (
+                    ftok!().expect("ftok! fail")
+                ).expect("msgget! fail")
+            },
+            {
+                let sem_id: i32 = semget_id! (
+                    ftok!().expect("ftok! fail")
+                ).expect("semget! fail");
+
+                semctl_init!(sem_id);
+                sem_id
+            },
+            {
+                let shm_id = shm_getboard!().expect("shm_getboard! fail");
+                let addr = shmat!(shm_id).expect("shmat! fail");
+                unsafe {
+                    std::mem::transmute(addr)
+                }
+            }
+        )
+    })
+}

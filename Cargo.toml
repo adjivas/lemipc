@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
 description = "subject of lemipc game"
 
+[dependencies.sem]
+git = "https://github.com/adjivas/sem.git"
+
 [dependencies.shm]
 git = "https://github.com/adjivas/shm.git"
 

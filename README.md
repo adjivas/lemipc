@@ -3,6 +3,11 @@
 [![Build Status](https://travis-ci.org/adjivas/lemipc.svg)](https://travis-ci.org/adjivas/lemipc)
 [![GPLv3 License](http://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/copyleft/gpl.html)
 
+#### To do:
+1. Implement semaphore.
+2. Submodule.
+3. Neko, video or Documentation.
+
 #### How to build:
 ```shell
 git clone https://github.com/adjivas/lemipc.git lem-ipc && cd lem-ipc

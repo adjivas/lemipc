@@ -21,10 +21,23 @@ extern crate shm as shm_crate;
 
 #[macro_use]
 #[macro_reexport (
-    msgctl,
+    semget,
+    semget_id,
+    semop,
+    semop_lock,
+    semop_unlock,
+    semctl,
+    semctl_init,
+    semctl_clear
+)]
+extern crate sem as sem_crate;
+
+#[macro_use]
+#[macro_reexport (
     msgget,
     msgsnd,
-    msgrcv
+    msgrcv,
+    msgctl
 )]
 extern crate msg as msg_crate;
 
@@ -52,6 +65,10 @@ extern crate io as io_crate;
 
 pub mod shm {
     pub use shm_crate::*;
+}
+
+pub mod sem {
+    pub use sem_crate::*;
 }
 
 pub mod msg {

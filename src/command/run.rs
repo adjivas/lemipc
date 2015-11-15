@@ -167,7 +167,7 @@ pub fn whoiam (pid: i32) {
 pub fn score <'a> (board: &'a Map) {
     let [a, b] = board.get_score();
 
-    write!("A-B ".as_ptr(), 4);
+    write!("\nA-B ".as_ptr(), 5);
     write_number!(a);
     write_character!('-');
     writeln_number!(b);
@@ -195,22 +195,29 @@ pub fn help (_: i32) {
 
 /// Dead dead dead !
 
+#[allow(unused_unsafe)]
 pub fn quit (_: i32) {
     let pid: i32 = getpid!();
-    let id = shm_getboard_if_created!().expect("shm_getboard_if_created! fail");
-    let addr = shmat!(id).expect("shmat! fail");
-    let board: &mut Map = {
+    let shm_id = shm_getboard_if_created!().expect (
+        "shm_getboard_if_created! fail"
+    );
+    let shm_addr = shmat!(shm_id).expect("shmat! fail");
+    let shm_map: &mut Map = {
         unsafe {
-            std::mem::transmute(addr)
+            std::mem::transmute(shm_addr)
         }
     };
+    let sem_id: i32 = semget_id! (
+        ftok!().expect("ftok! fail")
+    ).expect("semget! fail");
 
-    board.dead_pawn(pid);
-    score(&board);
-    if board.len_pawn() == 0 {
-        shmctl!(id, shm::ffi::Ipc::RMID);
-        msgctl!(id, msg::ffi::Ipc::RMID);
+    shm_map.dead_pawn(pid);
+    score(&shm_map);
+    if shm_map.len_pawn() == 0 {
+        shmctl!(shm_id, shm::ffi::Ipc::RMID);
+        msgctl!(shm_id, msg::ffi::Ipc::RMID);
+        semctl!(sem_id, sem::ffi::Ipc::RMID);
     }
-    shmdt!(addr);
+    shmdt!(shm_addr);
     exit!();
 }
