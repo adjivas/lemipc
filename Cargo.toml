@@ -1,5 +1,5 @@
 [package]
-name = "screen"
+name = "lemipc_display"
 version = "0.1.0"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
 description = "map"
@@ -39,3 +39,6 @@ default = ["include_sdl2"]
 include_sdl2 = ["pistoncore-sdl2_window"]
 include_glfw = ["pistoncore-glfw_window"]
 include_glutin = ["pistoncore-glutin_window"]
+
+[dependencies.lemipc]
+git = "https://github.com/adjivas/lemipc.git"

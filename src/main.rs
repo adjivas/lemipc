@@ -7,9 +7,8 @@
 
 #[macro_use] extern crate clap;
 
-extern crate screen;
-
-mod option;
+extern crate lemipc_display;
+extern crate lemipc;
 
 extern crate piston;
 extern crate opengl_graphics;
@@ -37,7 +36,7 @@ use piston::event_loop::*;
 /// font and the size.
 
 struct Draw <'a> {
-    board: screen::board::Board,
+    board: lemipc::board::Map,
     font: &'a std::path::Path,
     width: u32,
     height: u32,
@@ -64,9 +63,7 @@ impl <'a> Draw <'a> {
     pub fn get_diameter (
         &self,
     ) -> usize {
-        let size: usize = self.board.get_size();
-
-        size + size
+        lemipc::board::WIDTH + lemipc::board::HEIGHT
     }
 
     /// The `set_coord` updates the window size.
@@ -93,12 +90,17 @@ impl <'a> Draw <'a> {
     ) where G: graphics::Graphics {
         let y_size:f64 = self.height as f64 / self.get_diameter() as f64;
         let y_size_demi:f64 = y_size / 2.0;
-        let x_move:f64 = {self.board.get_size() - len} as f64 * y_size_demi;
+        let x_move:f64 = {lemipc::board::HEIGHT - len} as f64 * y_size_demi;
         let y_coord:f64 = y as f64 * y_size_demi;
-        let margin:f64 = self.board.get_size() as f64 * y_size_demi / 2.0;
+        let margin:f64 = lemipc::board::HEIGHT as f64 * y_size_demi / 2.0;
 
         for x in 0..len {
             let x_coord:f64 = x_move + x as f64 * y_size + y_size_demi;
+            /*let color = match self.board.get_team(x, len - 1) {
+                Some(false) => graphics::color::hex("404557"),
+                Some(true) => graphics::color::hex("404557"),
+                None => graphics::color::hex("c7d5ce"),
+            };*/
 
             graphics::Rectangle::new (
                 color,
@@ -126,24 +128,18 @@ impl <'a> Draw <'a> {
         context: &graphics::Context,
         g: &mut G,
     ) where G: graphics::Graphics {
-        if y % 2 == 0 {
-            self.put_cell_color (
-                len,
-                y,
-                graphics::color::hex("404557"),
-                &context,
-                g,
-            )
-        }
-        else {
-            self.put_cell_color (
-                len,
-                y,
-                graphics::color::hex("c7d5ce"),
-                &context,
-                g,
-            )
-        }
+        self.put_cell_color (
+            len,
+            y,
+            if y % 2 == 0 {
+                graphics::color::hex("404557")
+            }
+            else {
+                graphics::color::hex("c7d5ce")
+            },
+            &context,
+            g,
+        )
     }
 
     /// The `put_grid` draws our grid.
@@ -153,7 +149,7 @@ impl <'a> Draw <'a> {
         context: &graphics::Context,
         g: &mut G,
     ) where G: graphics::Graphics {
-        let size = self.board.get_size();
+        let size = lemipc::board::HEIGHT;
         let mut len = (1..size).chain((1..size + 1).rev());
         let mut y = (0..).take(size * 2);
 
@@ -168,12 +164,12 @@ impl <'a> Draw <'a> {
 
 fn main() {
     let yaml = load_yaml!("cli.yml");
-    let opts = option::Command::parse (
+    let opts = lemipc_display::option::Command::parse (
         &clap::App::from_yaml(yaml).get_matches()
     );
     let mut draw: Draw = Draw::new (
         std::path::Path::new (
-            "/home/adjivas/Project/42/ipc/assets/FiraSans-Regular.ttf"
+            "assets/FiraSans-Regular.ttf"
         ),
         opts.width,
         opts.height,
@@ -195,8 +191,7 @@ fn main() {
             gl.draw(args.viewport(), |context, g| {
                 graphics::clear(graphics::color::hex("c0ede6"), g);
                 draw.put_grid(&context, g);
- //               draw.put_info(&context, g);
-                /*graphics::Text::new_color (
+                 graphics::Text::new_color (
                     [0.0, 0.0, 0.0, 1.0], 32
                 ).draw (
                     "Lemipc",
@@ -206,7 +201,7 @@ fn main() {
                     &context.draw_state,
                     context.transform.trans(10.0, 100.0),
                     g
-                );*/
+                );
             });
         }
         event.update(|_| {});
