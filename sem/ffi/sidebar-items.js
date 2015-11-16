@@ -1,0 +1,1 @@
+initSidebarItems({"constant":[["NSEMS",""],["NSOPS",""],["SEM_NUM",""],["TOK_PATHNAME","The `TOK_*` const are default values for macros."],["TOK_PROJ_ID",""]],"enum":[["Ipc","The `Ipc` enum is a POSIX Standard for System V."],["Sem",""]],"fn":[["ftok",""],["semctl",""],["semget",""],["semop",""]],"struct":[["IpcPerm",""],["SemBuf",""],["SemIdDs",""],["SemUn",""]]});
