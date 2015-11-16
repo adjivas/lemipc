@@ -3,6 +3,12 @@ name = "lemipc"
 version = "0.1.0"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
 description = "subject of lemipc game"
+documentation = "http://adjivas.github.io/lemipc/lemipc"
+repository = "https://github.com/adjivas/lemipc.git"
+readme = "https://raw.githubusercontent.com/adjivas/lemipc/master/README.md"
+keywords = ["ipc", "semaphore", "segment", "message"]
+license "GPL-3.0"
+license-file = "https://raw.githubusercontent.com/adjivas/lemipc/master/LICENSE"
 
 [[bin]]
 name = "lemipc"
