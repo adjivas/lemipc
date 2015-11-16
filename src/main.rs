@@ -164,31 +164,6 @@ impl <'a> Draw <'a> {
             }
         }
     }
-
-    /// The `put_info` draws the title, the score
-    /// and the team.
-
-    #[allow(dead_code)]
-    #[allow(unused_variables)]
-    pub fn put_info<C: graphics::character::CharacterCache, G: graphics::Graphics<Texture=C::Texture>> (
-        &self,
-        context: &graphics::Context,
-        g: &mut G,
-    ) {
-        /*let glyph: &mut graphics::character::CharacterCache = &mut opengl_graphics::glyph_cache::GlyphCache::new (
-           self.font
-        ).expect("put_info glyph_cache fail");
-
-        graphics::Text::new_color (
-            [0.0, 0.0, 0.0, 1.0], 32
-        )*//*.draw (
-            "Lemipc",
-            glyph,
-            &context.draw_state,
-            context.transform.trans(10.0, 100.0),
-            g
-        )*/;
-    }
 }
 
 fn main() {
