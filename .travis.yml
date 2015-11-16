@@ -9,9 +9,9 @@ rust:
 
 install:
   - linux
-    [ $TRAVIS_BRANCH = display ] && sudo apt-get install libsdl2-dev
+    sudo apt-get install libsdl2-dev
   - mac
-    [ $TRAVIS_BRANCH = display ] && brew install libsdl2-dev
+    brew install libsdl2-dev
 
 
 os:
