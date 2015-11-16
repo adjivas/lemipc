@@ -1,5 +1,5 @@
 ---
-sudo: false
+sudo: true
 language: rust
 rust:
   - 1.3.0
@@ -7,20 +7,24 @@ rust:
   - nightly
   - beta
 
+before_install:
+  - sudo add-apt-repository -y ppa:kalakris/cmake
+  - sudo add-apt-repository -y ppa:team-xbmc/ppa
+  - sudo apt-get update -qq
+
 install:
-  - brew install sdl2
-  - brew install sdl2_ttf
+  - sudo apt-get install libXxf86vm-dev cmake libsdl2-dev
 
 os:
-  - osx
+  - linux
 
 env:
-    global:
-      - LD_LIBRARY_PATH: /usr/local/lib
+  global:
+    - LD_LIBRARY_PATH: /usr/local/lib
 
 branches:
   only:
-    - display
+    - master
 
 env:
   - ARCH=x86_64
@@ -34,4 +38,3 @@ addons:
   apt:
     packages:
       - gcc-multilib
-
