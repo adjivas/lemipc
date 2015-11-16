@@ -1,5 +1,5 @@
 ---
-sudo: false
+sudo: true
 language: rust
 rust:
   - 1.3.0
@@ -7,13 +7,25 @@ rust:
   - nightly
   - beta
 
+install:
+  - linux
+    [ $TRAVIS_BRANCH = display ] && sudo apt-get install libsdl2-dev
+  - mac
+    [ $TRAVIS_BRANCH = display ] && brew install libsdl2-dev
+
+
 os:
   - linux
   - osx
 
+env:
+    global:
+          - LD_LIBRARY_PATH: /usr/local/lib
+
 branches:
   only:
     - master
+    - display
 
 env:
   - ARCH=x86_64
@@ -27,7 +39,7 @@ matrix:
 
 script:
   - cargo build
-
+  - cargo test
 addons:
   apt:
     packages:
