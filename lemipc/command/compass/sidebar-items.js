@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Compass","IPC - compass help"]]});

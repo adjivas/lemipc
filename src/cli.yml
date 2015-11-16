@@ -1,0 +1,22 @@
+name: screen
+version: 1.0
+about: A monitor implementation for lemipc
+author: adjivas <adjivas@users.noreply.github.com>
+
+args:
+    - player:
+        help: Define wether teams is one or two.
+        short: p
+        long: player
+        takes_value: true
+        possible_values: [ one, two ]
+    - x:
+        help: Define the horizontal length of map.
+        long: horizon
+        takes_value: true
+        short: x
+    - y:
+        help: Define the vertical length of map.
+        long: vertical
+        takes_value: true
+        short: y

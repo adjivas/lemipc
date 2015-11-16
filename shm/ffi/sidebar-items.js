@@ -1,1 +1,0 @@
-initSidebarItems({"constant":[["TOK_PATHNAME","The `TOK_*, MSG_BUFF` const are default values for macros."],["TOK_PROJ_ID",""]],"enum":[["Ipc",""],["Shm","The `Ipc` enum is a POSIX Standard for System V."]],"fn":[["ftok",""],["shmat",""],["shmctl",""],["shmdt",""],["shmget",""]],"struct":[["IpcPerm",""],["ShmidDs",""]]});

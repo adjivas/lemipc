@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Sig",""]],"fn":[["getpid",""],["kill",""],["signal",""]]});

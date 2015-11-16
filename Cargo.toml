@@ -1,0 +1,41 @@
+[package]
+name = "screen"
+version = "0.1.0"
+authors = ["adjivas <adjivas@users.noreply.github.com>"]
+description = "map"
+
+[dependencies.clap]
+version = "*"
+features = [
+  "suggestions",
+  "color",
+  "yaml"
+]
+
+[dependencies.piston]
+version = "0.13.0"
+
+[dependencies.piston2d-opengl_graphics]
+name = "opengl_graphics"
+version = "0.14.0"
+
+[dependencies.piston2d-graphics]
+version = "0.10.0"
+
+[dependencies.pistoncore-sdl2_window]
+version = "0.16.0"
+optional = true
+
+[dependencies.pistoncore-glfw_window]
+version = "0.12.0"
+optional = true
+
+[dependencies.pistoncore-glutin_window]
+version = "0.15.0"
+optional = true
+
+[features]
+default = ["include_sdl2"]
+include_sdl2 = ["pistoncore-sdl2_window"]
+include_glfw = ["pistoncore-glfw_window"]
+include_glutin = ["pistoncore-glutin_window"]
