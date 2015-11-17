@@ -1,0 +1,20 @@
+[submodule "lib/sem"]
+	path = lib/sem
+	url = https://github.com/adjivas/sem.git
+	branch = master
+[submodule "lib/shm"]
+	path = lib/shm
+	url = https://github.com/adjivas/shm.git
+	branch = master
+[submodule "lib/sig"]
+	path = lib/sig
+	url = https://github.com/adjivas/sig.git
+	branch = master
+[submodule "lib/msg"]
+	path = lib/msg
+	url = https://github.com/adjivas/msg.git
+	branch = master
+[submodule "lib/io"]
+	path = lib/io
+	url = https://github.com/adjivas/io.git
+	branch = master

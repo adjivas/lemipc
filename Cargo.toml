@@ -8,26 +8,25 @@ repository = "https://github.com/adjivas/lemipc.git"
 readme = "https://raw.githubusercontent.com/adjivas/lemipc/master/README.md"
 keywords = ["ipc", "semaphore", "segment", "message"]
 license = "GPL-3.0"
-license-file = "https://raw.githubusercontent.com/adjivas/lemipc/master/LICENSE"
 
 [[bin]]
 name = "lemipc"
 doc = false
 
 [dependencies.sem]
-git = "https://github.com/adjivas/sem.git"
+path = "lib/sem"
 
 [dependencies.shm]
-git = "https://github.com/adjivas/shm.git"
+path = "lib/shm"
 
 [dependencies.sig]
-git = "https://github.com/adjivas/sig.git"
+path = "lib/sig"
 
 [dependencies.msg]
-git = "https://github.com/adjivas/msg.git"
+path = "lib/msg"
 
 [dependencies.io]
-git = "https://github.com/adjivas/io.git"
+path = "lib/io"
 
 [features]
 signal = []
