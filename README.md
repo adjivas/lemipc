@@ -4,7 +4,8 @@
 
 #### How to build:
 ```shell
-git clone https://github.com/adjivas/lemipc.git lem-ipc && cd lem-ipc
+git clone --recursive -b master https://github.com/adjivas/lemipc.git lemipc && cd lemipc
+
 - cargo build // Without feature.
 - cargo build --features signal // With the signal' feature.
 ```
