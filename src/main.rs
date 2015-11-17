@@ -8,7 +8,7 @@
 #[macro_use] extern crate clap;
 
 extern crate lemipc_display;
-extern crate lemipc;
+#[macro_use] extern crate lemipc;
 
 extern crate piston;
 extern crate opengl_graphics;
@@ -36,7 +36,7 @@ use piston::event_loop::*;
 /// font and the size.
 
 struct Draw <'a> {
-    board: lemipc::board::Map,
+    board: &'a lemipc::board::Map,
     font: &'a std::path::Path,
     width: u32,
     height: u32,
@@ -48,12 +48,13 @@ impl <'a> Draw <'a> {
     /// value Draw interface.
 
     pub fn new (
+        board: &'a lemipc::board::Map,
         font: &'a std::path::Path,
         width: u32,
         height: u32,
     ) -> Self {
         Draw {
-            board: Default::default(),
+            board: board,
             font: font,
             width: width,
             height: height,
@@ -180,7 +181,15 @@ fn main() {
     let opts = lemipc_display::option::Command::parse (
         &clap::App::from_yaml(yaml).get_matches()
     );
+    let shm_map: &mut lemipc::board::Map = {
+        let shm_id = shm_getboard!().expect("shm_getboard! fail");
+        let addr = shmat!(shm_id).expect("shmat! fail");
+        unsafe {
+            std::mem::transmute(addr)
+        }
+    };
     let mut draw: Draw = Draw::new (
+        shm_map,
         std::path::Path::new (
             "assets/FiraSans-Regular.ttf"
         ),
@@ -188,11 +197,11 @@ fn main() {
         opts.height,
     );
     let opengl = opengl_graphics::OpenGL::V3_2;
-    let window: Window = piston::window::WindowSettings::new("lemipc", [
+    let window_setting: Window = piston::window::WindowSettings::new("lemipc", [
         opts.width,
         opts.height,
     ]).exit_on_esc(true).opengl(opengl).build().expect("window_setting");
-    let window = std::rc::Rc::new(std::cell::RefCell::new(window));
+    let window = std::rc::Rc::new(std::cell::RefCell::new(window_setting));
     let ref mut gl = opengl_graphics::GlGraphics::new(opengl);
 
     for event in window.clone().events() {

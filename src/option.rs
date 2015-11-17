@@ -8,8 +8,8 @@
 extern crate clap;
 
 const DEFAULT_PLAYER: &'static str = "one";
-const DEFAULT_X: &'static str = "40";
-const DEFAULT_Y: &'static str = "40";
+const DEFAULT_X: &'static str = "520";
+const DEFAULT_Y: &'static str = "480";
 
 /// The `Player` enum defines the team of our player.
 

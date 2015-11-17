@@ -42,3 +42,6 @@ include_glutin = ["pistoncore-glutin_window"]
 
 [dependencies.lemipc]
 git = "https://github.com/adjivas/lemipc.git"
+
+[dependencies.shm]
+git = "https://github.com/adjivas/shm.git"
