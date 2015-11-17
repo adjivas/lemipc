@@ -8,10 +8,10 @@
 mod map;
 mod cell;
 
-const VISION: isize = 1;
+pub const VISION: isize = 1;
 
-const WIDTH: usize = 4;
-const HEIGHT: usize = 4;
+pub const WIDTH: usize = 4;
+pub const HEIGHT: usize = 4;
 
 pub use self::map::Map;
 pub use self::cell::Cell;

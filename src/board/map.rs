@@ -46,7 +46,7 @@ impl Map {
 
     /// The `get_team` function returns the team cell.
 
-    fn get_team <'a> (
+    pub fn get_team <'a> (
         &'a self,
         x: usize,
         y: usize,
