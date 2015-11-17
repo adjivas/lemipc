@@ -1,0 +1,8 @@
+[submodule "lib/lemipc"]
+	path = lib/lemipc
+	url = https://github.com/adjivas/lemipc.git
+	branch = master
+[submodule "lib/shm"]
+	path = lib/shm
+	url = https://github.com/adjivas/shm.git
+	branch = master

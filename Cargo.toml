@@ -2,7 +2,10 @@
 name = "lemipc_display"
 version = "0.1.0"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
-description = "map"
+description = "display the map SHM"
+repository = "https://github.com/adjivas/lemipc/tree/display"
+readme = "https://raw.githubusercontent.com/adjivas/lemipc/display/README.md"
+license = "GPL-3.0"
 
 [dependencies.clap]
 version = "*"
@@ -41,7 +44,7 @@ include_glfw = ["pistoncore-glfw_window"]
 include_glutin = ["pistoncore-glutin_window"]
 
 [dependencies.lemipc]
-git = "https://github.com/adjivas/lemipc.git"
+path = "lib/lemipc"
 
 [dependencies.shm]
-git = "https://github.com/adjivas/shm.git"
+path = "lib/shm"
