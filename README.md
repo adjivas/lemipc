@@ -28,6 +28,12 @@ Shm   Sem Msg Sig   Io
 |__ Cargo.toml
 |__ LICENSE
 |__ README.md
+|__ lib
+|   |__ shm@
+|   |__ sem@
+|   |__ msh@
+|   |__ sig@
+|   \__ io@
 \__ src
     |__ board
     |   |__ cell.rs
