@@ -10,10 +10,12 @@ git clone https://github.com/adjivas/lemipc.git lem-ipc && cd lem-ipc
 ```
 
 #### How to run:
+```shell
 Without feature:
 - cargo run.
 With the signal' feature:
 - cargo run --features signal
+```
 
 #### Cargo'git-Dependencies:
 ```shell
