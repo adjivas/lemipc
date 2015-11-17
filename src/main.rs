@@ -205,7 +205,6 @@ fn main() {
     let ref mut gl = opengl_graphics::GlGraphics::new(opengl);
 
     for event in window.clone().events() {
-
         if let Some((x, y)) = event.resize(|w, h| (w, h)) {
             draw.set_coord(x, y);
         }
@@ -214,14 +213,14 @@ fn main() {
                 graphics::clear(graphics::color::hex("c0ede6"), g);
                 draw.put_grid(&context, g);
                  graphics::Text::new_color (
-                    [0.0, 0.0, 0.0, 1.0], 32
+                    [0.0, 0.0, 0.0, 1.0], 42
                 ).draw (
-                    "Lemipc",
+                    "Lem-Ipc",
                     &mut opengl_graphics::glyph_cache::GlyphCache::new (
                        draw.font
                     ).expect("glyph_cache fail"),
                     &context.draw_state,
-                    context.transform.trans(10.0, 100.0),
+                    context.transform.trans(10.0, 40.0),
                     g
                 );
             });
