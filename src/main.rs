@@ -96,11 +96,6 @@ impl <'a> Draw <'a> {
 
         for x in 0..len {
             let x_coord:f64 = x_move + x as f64 * y_size + y_size_demi;
-            /*let color = match self.board.get_team(x, len - 1) {
-                Some(false) => graphics::color::hex("404557"),
-                Some(true) => graphics::color::hex("404557"),
-                None => graphics::color::hex("c7d5ce"),
-            };*/
 
             graphics::Rectangle::new (
                 color,
@@ -115,6 +110,24 @@ impl <'a> Draw <'a> {
                 ),
                 g
             );
+            if let Some(team) = self.board.get_team(x, len - 1) {
+                graphics::Rectangle::new_round (
+                    if team == true {
+                        graphics::color::hex("d5Ac37")
+                    } else {
+                        graphics::color::hex("4567a3")
+                    },
+                    y_size / 2.0
+                ).draw (
+                    [0.0, 0.0, y_size, y_size],
+                    &context.draw_state,
+                    context.transform.rot_deg(45.0).trans (
+                        y_coord + x_coord + margin + margin,
+                        y_coord - x_coord + margin - margin,
+                    ),
+                    g
+                );
+            }
         }
     }
 
