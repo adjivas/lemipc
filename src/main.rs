@@ -182,12 +182,12 @@ fn main() {
     let opts = lemipc_display::option::Command::parse (
         &clap::App::from_yaml(yaml).get_matches()
     );
-    let shm_map: &mut lemipc::board::Map = {
+    let (shm_addr, shm_map): (*mut i32, &mut lemipc::board::Map) = {
         let shm_id = shm_getboard!().expect("shm_getboard! fail");
         let addr = shmat!(shm_id).expect("shmat! fail");
-        unsafe {
+        (addr, unsafe {
             std::mem::transmute(addr)
-        }
+        })
     };
     let sem_id:i32 = {
         let sem_id: i32 = semget_id! (
@@ -241,4 +241,5 @@ fn main() {
         }
         event.update(|_| {});
     }
+    shmdt!(shm_addr);
 }
