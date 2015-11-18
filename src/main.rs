@@ -214,6 +214,9 @@ fn main() {
     let ref mut gl = opengl_graphics::GlGraphics::new(opengl);
 
     for event in window.clone().events() {
+		if draw.board.len_pawn() == 0 {
+			break ;
+		}
         if let Some((x, y)) = event.resize(|w, h| (w, h)) {
             draw.set_coord(x, y);
         }
