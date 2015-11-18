@@ -7,6 +7,7 @@
 
 #[macro_use] extern crate lemipc;
 
+#[allow(unused_unsafe, unused_assignments)]
 #[cfg(feature = "signal")]
 fn main () {
     let pid: i32 = getpid!();
