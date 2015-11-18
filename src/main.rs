@@ -83,35 +83,38 @@ impl <'a> Draw <'a> {
 
     fn put_cell_color <G> (
         &self,
-        len: usize,
-        y: usize,
+        len_x: usize,
+        len_y: usize,
         color: graphics::types::Color,
         context: &graphics::Context,
         g: &mut G,
     ) where G: graphics::Graphics {
         let y_size:f64 = self.height as f64 / self.get_diameter() as f64;
         let y_size_demi:f64 = y_size / 2.0;
-        let x_move:f64 = {lemipc::board::HEIGHT - len} as f64 * y_size_demi;
-        let y_coord:f64 = y as f64 * y_size_demi;
+        let x_move:f64 = {lemipc::board::HEIGHT - len_x} as f64 * y_size_demi;
+        let y_coord:f64 = len_y as f64 * y_size_demi;
         let margin:f64 = lemipc::board::HEIGHT as f64 * y_size_demi / 2.0;
 
-        for x in 0..len {
+        for (x, y) in {0..len_x}.zip (
+            {0..{if len_y < len_x {len_y+1} else {lemipc::board::HEIGHT}}}.rev()
+        ) {
             let x_coord:f64 = x_move + x as f64 * y_size + y_size_demi;
 
             graphics::Rectangle::new (
-                color,
+              color,
             ).draw (
                 [0.0, 0.0, y_size, y_size],
                 &context.draw_state,
                 context.transform.rot_deg (
-                    45.0
+                  45.0
                 ).trans (
                     y_coord + x_coord + margin + margin,
                     y_coord - x_coord + margin - margin,
                 ),
                 g
             );
-            if let Some(team) = self.board.get_team(x, len - 1) {
+            println!("{}..{} -> {} {}", len_y, len_x, y, if len_y < len_x {x} else {(lemipc::board::HEIGHT - len_x + x)});
+            if let Some(team) = self.board.get_team(if len_y < len_x {x} else {(lemipc::board::HEIGHT - len_x + x)}, y) {
                 graphics::Rectangle::new_round (
                     if team == true {
                         graphics::color::hex("d5Ac37")
@@ -130,6 +133,7 @@ impl <'a> Draw <'a> {
                 );
             }
         }
+        println!("");
     }
 
     /// The `put_cell_color` draws line by line
@@ -214,6 +218,7 @@ fn main() {
     let ref mut gl = opengl_graphics::GlGraphics::new(opengl);
 
     for event in window.clone().events() {
+        println!("");
 		if draw.board.len_pawn() == 0 {
 			break ;
 		}
