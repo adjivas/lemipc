@@ -176,6 +176,7 @@ impl <'a> Draw <'a> {
     }
 }
 
+#[allow(unused_unsafe, unused_assignments)]
 fn main() {
     let yaml = load_yaml!("cli.yml");
     let opts = lemipc_display::option::Command::parse (
@@ -187,6 +188,14 @@ fn main() {
         unsafe {
             std::mem::transmute(addr)
         }
+    };
+    let sem_id:i32 = {
+        let sem_id: i32 = semget_id! (
+            ftok!().expect("ftok! fail")
+        ).expect("semget! fail");
+
+        semctl_init!(sem_id);
+        sem_id
     };
     let mut draw: Draw = Draw::new (
         shm_map,
@@ -211,8 +220,10 @@ fn main() {
         if let Some(args) = event.render_args() {
             gl.draw(args.viewport(), |context, g| {
                 graphics::clear(graphics::color::hex("c0ede6"), g);
+                semop_lock!(sem_id);
                 draw.put_grid(&context, g);
-                 graphics::Text::new_color (
+                semop_unlock!(sem_id);
+                graphics::Text::new_color (
                     [0.0, 0.0, 0.0, 1.0], 42
                 ).draw (
                     "Lem-Ipc",

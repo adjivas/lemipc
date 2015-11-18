@@ -48,3 +48,6 @@ path = "lib/lemipc"
 
 [dependencies.shm]
 path = "lib/shm"
+
+[dependencies.sem]
+path = "lib/sem"

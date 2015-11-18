@@ -6,3 +6,7 @@
 	path = lib/shm
 	url = https://github.com/adjivas/shm.git
 	branch = master
+[submodule "lib/sem"]
+	path = lib/sem
+	url = https://github.com/adjivas/sem.git
+	branch = master
