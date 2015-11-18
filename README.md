@@ -4,7 +4,7 @@
 
 #### How to build:
 ```shell
-git clone --recursive -b display https://github.com/adjivas/lemipc.git lemipc && cd lemipc
+git clone --recursive -b display https://github.com/adjivas/lemipc.git lemipc_display && cd lemipc_display
 cargo build
 ```
 
