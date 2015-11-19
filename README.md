@@ -12,10 +12,7 @@ git clone --recursive -b master https://github.com/adjivas/lemipc.git lemipc && 
 
 #### How to run:
 ```shell
-Without feature:
-- cargo run.
-With the signal' feature:
-- cargo run --features signal
+cargo run.
 ```
 
 #### Cargo'git-Dependencies:
