@@ -61,7 +61,7 @@ extern crate sig as sig_crate;
     writeln,
     writeln_number,
 )]
-extern crate io as io_crate;
+extern crate io_synesthesist as io_crate;
 
 pub mod shm {
     pub use shm_crate::*;
