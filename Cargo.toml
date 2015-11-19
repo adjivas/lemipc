@@ -1,6 +1,6 @@
 [package]
 name = "lemipc_display"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["adjivas <adjivas@users.noreply.github.com>"]
 description = "display the map SHM"
 repository = "https://github.com/adjivas/lemipc/tree/display"

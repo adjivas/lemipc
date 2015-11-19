@@ -113,7 +113,6 @@ impl <'a> Draw <'a> {
                 ),
                 g
             );
-            println!("{}..{} -> {} {}", len_y, len_x, y, if len_y < len_x {x} else {(lemipc::board::HEIGHT - len_x + x)});
             if let Some(team) = self.board.get_team(if len_y < len_x {x} else {(lemipc::board::HEIGHT - len_x + x)}, y) {
                 graphics::Rectangle::new_round (
                     if team == true {
@@ -133,7 +132,6 @@ impl <'a> Draw <'a> {
                 );
             }
         }
-        println!("");
     }
 
     /// The `put_cell_color` draws line by line
@@ -218,7 +216,6 @@ fn main() {
     let ref mut gl = opengl_graphics::GlGraphics::new(opengl);
 
     for event in window.clone().events() {
-        println!("");
 		if draw.board.len_pawn() == 0 {
 			break ;
 		}
